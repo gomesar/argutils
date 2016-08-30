@@ -2,8 +2,9 @@ import sys
 import socket
 import threading
 
-IP      = "0.0.0.0"
-PORT    = 0
+IP          = "0.0.0.0"
+PORT        = 0
+QUIT_CMD    = "!q"
 
 def ear(s):
     while 1:
@@ -13,7 +14,7 @@ def ear(s):
             sys.stdout.flush()
             #print " {"+d+"} "
 
-            if d.startswith('@quit'):
+            if d.startswith(QUIT_CMD):
                 print "[!] DC"
                 break;
         except :
@@ -27,8 +28,8 @@ def tongue(s):
             m = raw_input('>')
             sys.stdout.write("\033[F\033[K")
             sys.stdout.flush()
-            if m.startswith('@quit'):
-                s.sendto(m.replace('@quit', '@quitting!    ') , (IP, PORT))
+            if m.startswith(QUIT_CMD):
+                s.sendto(m.replace(QUIT_CMD, '@quitting!    ') , (IP, PORT))
                 print "[!] Quitting"
                 break;
             else:
