@@ -39,4 +39,3 @@ echo "  '=]): .)  (["
 echo "    |:: '    |"
 echo "     ~~----~~ "
 # ASCII figure created by: Paul Martin Howard
-
