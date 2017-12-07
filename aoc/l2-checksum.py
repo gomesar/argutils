@@ -1,3 +1,7 @@
+'''
+	Alternative way:
+	sum([max(l) - min(l) for l in [ [int(i.split('\n')[0]) for i in w.split('\t')] for w in tuple(open("checksum.csv"))]])
+'''
 def do_cksum(file_name):
     li = list()
     sum = 0
