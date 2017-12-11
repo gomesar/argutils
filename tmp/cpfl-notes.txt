@@ -1,0 +1,23 @@
+url:
+	http://www.cpfl.combr5001.info/11122017/paginas-70991/servicos-online-1048.aspx?39636
+ip:
+	121.156.123.241
+IP data:
+	ISP 	Korea Telecom
+	ASN 	AS4766
+
+SHA256:
+	3db042a13a9a54fbf02776d7fcd77f50012e21c046d77388729d67e82357fdac
+
+Antivírus 	Resultado 		Atualização
+Webroot 	W32.Trojan.Gen 	20171211 
+
+
+Magic literal
+PE32 executable for MS Windows (GUI) Intel 80386 32-bit
+
+TrID 	Windows screen saver (60.5%)
+Win32 Executable (generic) (20.8%)
+Generic Win/DOS Executable (9.2%)
+DOS Executable Generic (9.2%)
+VXD Driver (0.1%)
