@@ -33,6 +33,9 @@
 #include <time.h>
  
 
+/*
+ * Pseudo header necessário para calculo do checksum
+ */
 struct tcp_pseudo_hdr
 {
     u_int32_t source_address;
@@ -62,7 +65,7 @@ int main(int argc, char* argv[])
     char* packet;
 	char packet2[4096];
     char* buffer;
-	char buffer2[4096];
+	char *buffer2;
     char* pseudogram;
 	char *data;
 	int sockfd;
@@ -79,8 +82,8 @@ int main(int argc, char* argv[])
     }
  
     parse_argvs(argv, dst_addr, src_addr);
-    printf("Source address: %s\n", src_addr);
-    printf("Destination address: %s\n", dst_addr);
+    printf("[:] Source address: %s\n", src_addr);
+    printf("[:] Destination address: %s\n\n", dst_addr);
      
     /*
      * allocate all necessary memory
@@ -92,11 +95,11 @@ int main(int argc, char* argv[])
 	tcp = malloc(sizeof(struct tcphdr));	// @gar
     packet = malloc(sizeof(struct iphdr) + sizeof(struct icmphdr));
     buffer = malloc(sizeof(struct iphdr) + sizeof(struct icmphdr));
-    //buffer2 = malloc(sizeof(struct iphdr) + sizeof(struct tcphdr));
+    buffer2 = malloc(sizeof(struct iphdr) + sizeof(struct tcphdr));
     /****************************************************************/
     // zero fill
 	memset(packet2, 0, 4096);
-	memset(buffer2, 0, 4096);
+//	memset(buffer2, 0, 4096);
 
 	// pointers
     ip = (struct iphdr*) packet;
@@ -212,6 +215,7 @@ int main(int argc, char* argv[])
      *  now the packet is sent
 	 *  ICMP
      */
+	int bf_size =  sizeof(struct iphdr) + sizeof(struct icmphdr);
     printf("[ICMP-ER] Sending %d byte packet to %s\n", (int) sizeof(packet), dst_addr);
 
 	// ----------------------------- TIME CLOCK [START] ------------------------
@@ -220,14 +224,14 @@ int main(int argc, char* argv[])
      
     // now we listen for responses
     addrlen = sizeof(connection);
-    if (recvfrom(sockfd, buffer, sizeof(struct iphdr) + sizeof(struct icmphdr), 0, (struct sockaddr *)&connection, &addrlen) == -1) {
+    if (recvfrom(sockfd, buffer, bf_size, 0, (struct sockaddr *)&connection, &addrlen) == -1) {
 	    perror("recv");
     }
     else {
 		icmp_e = clock();
 	// ----------------------------- TIME CLOCK [END] ------------------------
 
-	    printf("Received %d byte reply from %s:\n", (int) sizeof(buffer), dst_addr);
+	    //printf("Received %d byte reply from %s:\n", (int) sizeof(buffer), dst_addr);
         //ip_reply = (struct iphdr*) buffer;
 	    //printf("TTL: %d\n", ip_reply->ttl);
     }
@@ -237,21 +241,21 @@ int main(int argc, char* argv[])
 	 * TCP
 	 */
     printf("[TCP-3WH] Sending %d byte packet to %s\n", (int) ip2->tot_len, dst_addr);
+	int bf_size2 = sizeof(struct iphdr) + sizeof(struct tcphdr);
 	// ----------------------------- TIME CLOCK [START] ------------------------
 	tcp_s = clock();
 	if (sendto(sockfd2, packet2, ip2->tot_len, 0, (struct sockaddr *)&connection, sizeof(struct sockaddr)) < 0) {
-		perror("sendto failed");
+		perror("[!] sendto failed");
 	}
      
     addrlen = sizeof(connection);
-    //if (recvfrom(sockfd2, &buffer2, sizeof(struct iphdr) + sizeof(struct tcphdr), 0, (struct sockaddr *)&connection, &addrlen) == -1) {
-    if (recvfrom(sockfd2, &buffer2, 4096, 0, (struct sockaddr *)&connection, &addrlen) == -1) {
+    if (recvfrom(sockfd2, buffer2, bf_size2, 0, (struct sockaddr *)&connection, &addrlen) == -1) {
 	    perror("recv");
     }
     else {
 		tcp_e = clock();
 	// ----------------------------- TIME CLOCK [END] ------------------------
-	    printf("Received reply from %s:\n", dst_addr);
+	    //printf("Received reply from %s:\n", dst_addr);
 	}
 
     close(sockfd);
@@ -263,6 +267,7 @@ int main(int argc, char* argv[])
 
 	printf("\n\tICMP time: %ld (%fms)", icmp_e-icmp_s, icmp_time);
 	printf("\n\tTCP time:  %ld (%fms)\n", tcp_e-tcp_s, tcp_time);
+
     return 0;
 }
  
