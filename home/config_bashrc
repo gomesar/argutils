@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "# GomesAR " >> ~/.bashrc
+echo "alias ç='clear'" >> ~/.bashrc
+echo "alias çl='clear; ls -lhaF'" >> ~/.bashrc
+echo "alias me='cat ~/.me'" >> ~/.bashrc
+
+if [[ $1 -eq "full" ]]; then
+	touch ~/.me
+	echo "Alexandre R Gomes" >> ~/.me
+	echo "gomes.bcc@gmail.com | gomes.ar@protonmail.ch | agomes@lasca.ic.unicamp.br" >> ~/.me
+fi
