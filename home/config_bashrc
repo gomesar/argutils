@@ -1,9 +1,6 @@
 #!/bin/bash
 
-echo "# GomesAR " >> ~/.bashrc
-echo "alias ç='clear'" >> ~/.bashrc
-echo "alias çl='clear; ls -lhaF'" >> ~/.bashrc
-echo "alias me='cat ~/.me'" >> ~/.bashrc
+cat "qt-bashrc" >> ~/.bashrc
 
 if [[ $1 -eq "full" ]]; then
 	touch ~/.me
